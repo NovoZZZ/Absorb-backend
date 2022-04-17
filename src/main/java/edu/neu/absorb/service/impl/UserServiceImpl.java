@@ -55,14 +55,13 @@ public class UserServiceImpl implements UserService {
             throw new AuthException(ExceptionEnum.LOGIN_FAILED_EXCEPTION);
         }
         // encrypt password
-        String encryptedPassword = DigestUtil.md5Hex(loginRequest.getPassword());
-        if (!userInfo.getPassword().equals(encryptedPassword)) {
-            throw new AuthException(ExceptionEnum.LOGIN_FAILED_EXCEPTION);
+        if (!DigestUtil.bcryptCheck(loginRequest.getPassword(), userInfo.getPassword())) {
+            throw new AuthException(ExceptionEnum.WRONG_PASSWORD_EXCEPTION);
         }
         // pass validation, generate new token
         String newToken = generateNewToken(userInfo.getUserId());
         // return user login info
-        return new LoginResponse(userInfo.getUsername(), userInfo.getNickname(), newToken);
+        return new LoginResponse(userInfo.getUserId(), userInfo.getUsername(), userInfo.getNickname(), newToken);
     }
 
     @Override
@@ -74,8 +73,27 @@ public class UserServiceImpl implements UserService {
             throw new CommonException(ExceptionEnum.ILLEGAL_ARGUMENT_EXCEPTION);
         }
         // check if there are duplicate usernames
-
-        return null;
+        String currentUsername = signUpRequest.getUsername();
+        QueryWrapper<User> usernameQuery = new QueryWrapper<>();
+        usernameQuery.eq("username", currentUsername);
+        if (userMapper.selectCount(usernameQuery) != 0) {
+            throw new CommonException(ExceptionEnum.USERNAME_EXIST_EXCEPTION);
+        }
+        // insert new row
+        User userInfo = new User(null, currentUsername, signUpRequest.getNickname(), DigestUtil.bcrypt(signUpRequest.getPassword()), null, null, null);
+        if (userMapper.insert(userInfo) != 1) {
+            throw new CommonException(ExceptionEnum.SERVER_EXCEPTION);
+        }
+        // get the new user id
+        Integer newUserId = userMapper.getLastCreatedUserId();
+        // generate new token
+        String newToken = generateNewToken(newUserId);
+        // return result
+        LoginResponse response = new LoginResponse(newUserId,
+                currentUsername,
+                signUpRequest.getNickname(),
+                newToken);
+        return response;
     }
 
     /**

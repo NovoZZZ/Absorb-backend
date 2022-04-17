@@ -2,6 +2,8 @@ package edu.neu.absorb.controller;
 
 import edu.neu.absorb.dto.CommonResponse;
 import edu.neu.absorb.dto.request.LoginRequest;
+import edu.neu.absorb.dto.request.SignUpRequest;
+import edu.neu.absorb.dto.response.UserInfoResponse;
 import edu.neu.absorb.exception.AuthException;
 import edu.neu.absorb.exception.ExceptionEnum;
 import edu.neu.absorb.pojo.User;
@@ -35,7 +37,7 @@ public class UserController {
             // no authorization
             throw new AuthException(ExceptionEnum.AUTH_EXCEPTION);
         }
-        return CommonResponse.success(userService.getUserByUserId(userId));
+        return CommonResponse.success(new UserInfoResponse(userService.getUserByUserId(userId)));
     }
 
     /**
@@ -47,5 +49,15 @@ public class UserController {
     @PostMapping("/login")
     public CommonResponse login(@RequestBody LoginRequest loginRequest) {
         return CommonResponse.success(userService.login(loginRequest));
+    }
+
+    /**
+     * sign up request
+     * @param request sign up request
+     * @return result
+     */
+    @PostMapping("/create")
+    public CommonResponse signUp(@RequestBody SignUpRequest request) {
+        return CommonResponse.success(userService.signUp(request));
     }
 }
