@@ -67,9 +67,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponse signUp(@NonNull SignUpRequest signUpRequest) {
         // check parameters
-        if (signUpRequest.getUsername().equals("")
-                || signUpRequest.getNickname().equals("")
-                || signUpRequest.getPassword().equals("")) {
+        if (signUpRequest.getUsername().trim().equals("")
+                || signUpRequest.getNickname().trim().equals("")
+                || signUpRequest.getPassword().trim().equals("")) {
             throw new CommonException(ExceptionEnum.ILLEGAL_ARGUMENT_EXCEPTION);
         }
         // check if there are duplicate usernames
@@ -96,8 +96,38 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
+    public boolean validateToken(@NonNull Integer userId, @NonNull String token) {
+        // get user info
+        User user = userMapper.selectById(userId);
+        return user.getToken().equals(token);
+    }
+
+    @Override
+    public boolean changePassword(@NonNull Integer userId, @NonNull String newPassword) {
+        if (newPassword.trim().equals("")) {
+            return false;
+        }
+        // get user info
+        User user = userMapper.selectById(userId);
+        // encrypt password
+        user.setPassword(DigestUtil.bcrypt(newPassword));
+        // update password
+        userMapper.updateById(user);
+        return true;
+    }
+
+    @Override
+    public boolean validateOldPassword(@NonNull Integer userId, @NonNull String password) {
+        // get user info
+        User user = userMapper.selectById(userId);
+        // return check result
+        return DigestUtil.bcryptCheck(password, user.getPassword());
+    }
+
     /**
      * generate new token
+     *
      * @param userId target user
      * @return new token
      */

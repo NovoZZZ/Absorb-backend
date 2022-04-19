@@ -1,6 +1,7 @@
 package edu.neu.absorb.controller;
 
 import edu.neu.absorb.dto.CommonResponse;
+import edu.neu.absorb.dto.request.ChangePasswordRequest;
 import edu.neu.absorb.dto.request.LoginRequest;
 import edu.neu.absorb.dto.request.SignUpRequest;
 import edu.neu.absorb.dto.response.UserInfoResponse;
@@ -29,8 +30,8 @@ public class UserController {
      * @param token  token
      * @return user info
      */
-    @GetMapping("/info/{id}&{token}")
-    public CommonResponse getUserInfo(@PathVariable("id") Integer userId, @PathVariable("token") String token) {
+    @GetMapping("/info")
+    public CommonResponse getUserInfo(@RequestParam("id") Integer userId, @RequestParam("token") String token) {
         // validate token
         User userInfo = userService.getUserByToken(token);
         if (userInfo == null || !userInfo.getUserId().equals(userId)) {
@@ -59,5 +60,27 @@ public class UserController {
     @PostMapping("/create")
     public CommonResponse signUp(@RequestBody SignUpRequest request) {
         return CommonResponse.success(userService.signUp(request));
+    }
+
+    /**
+     * change user password
+     * @param request change password request
+     * @return result
+     */
+    @PostMapping("/change_password")
+    public CommonResponse changePassword(@RequestBody ChangePasswordRequest request) {
+        // validate token
+        if (!userService.validateToken(request.getUserId(), request.getToken())) {
+            throw new AuthException(ExceptionEnum.AUTH_EXCEPTION);
+        }
+        // validate old password
+        if (!userService.validateOldPassword(request.getUserId(), request.getOldPassword())) {
+            return CommonResponse.success("Incorrect old password");
+        }
+        // update new password
+        if (!userService.changePassword(request.getUserId(), request.getNewPassword())) {
+            return CommonResponse.success("Invalid new password");
+        }
+        return CommonResponse.success("Successfully change password");
     }
 }

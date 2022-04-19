@@ -12,6 +12,7 @@ import edu.neu.absorb.pojo.User;
 public interface UserService {
     /**
      * Get user info by user id
+     *
      * @param userId target user id
      * @return user info
      */
@@ -19,6 +20,7 @@ public interface UserService {
 
     /**
      * Get user info by username
+     *
      * @param username target username
      * @return user info
      */
@@ -26,6 +28,7 @@ public interface UserService {
 
     /**
      * Get user info by token
+     *
      * @param token target token
      * @return user token
      */
@@ -33,6 +36,7 @@ public interface UserService {
 
     /**
      * handle login request
+     *
      * @param loginRequest login request
      * @return login response
      */
@@ -40,8 +44,35 @@ public interface UserService {
 
     /**
      * handle sign up request
+     *
      * @param signUpRequest sign up request
      * @return sign up response -- same as login response
      */
     LoginResponse signUp(SignUpRequest signUpRequest);
+
+    /**
+     * validate token is correct
+     * @param userId target user id
+     * @param token token
+     * @return correct token or not
+     */
+    boolean validateToken(Integer userId, String token);
+
+    /**
+     * change user password
+     *
+     * @param userId      target user
+     * @param newPassword new password
+     * @return change password result
+     */
+    boolean changePassword(Integer userId, String newPassword);
+
+    /**
+     * validate user password is correct or not
+     *
+     * @param userId   target user
+     * @param password old password
+     * @return password is correct or not
+     */
+    boolean validateOldPassword(Integer userId, String password);
 }
