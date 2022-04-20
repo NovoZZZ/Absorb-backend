@@ -52,8 +52,9 @@ public interface UserService {
 
     /**
      * validate token is correct
+     *
      * @param userId target user id
-     * @param token token
+     * @param token  token
      * @return correct token or not
      */
     boolean validateToken(Integer userId, String token);
