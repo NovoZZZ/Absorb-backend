@@ -57,4 +57,13 @@ public class FocusController {
         return CommonResponse.success(focusService.getFocusDetailByHistoryId(historyId));
     }
 
+    /**
+     * get leaderboard list
+     * @param total show total record leaderboard or just today's leaderboard
+     * @return result
+     */
+    @GetMapping("/leaderboard")
+    public CommonResponse getLeaderboardTop10(@RequestParam("total") Integer total) {
+        return CommonResponse.success(focusService.getLeaderboardTop10(total));
+    }
 }

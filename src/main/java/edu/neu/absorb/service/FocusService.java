@@ -1,5 +1,6 @@
 package edu.neu.absorb.service;
 
+import edu.neu.absorb.dto.response.LeaderboardRecordInfo;
 import edu.neu.absorb.pojo.FocusHistory;
 
 import java.util.List;
@@ -33,4 +34,11 @@ public interface FocusService {
      */
     FocusHistory getFocusDetailByHistoryId(Integer historyId);
 
+    /**
+     * get leaderboard top 10 records
+     *
+     * @param total show total records or just today's record, 1=total, 0=today
+     * @return result
+     */
+    List<LeaderboardRecordInfo> getLeaderboardTop10(Integer total);
 }
