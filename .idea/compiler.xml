@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Absorb" />
+        <module name="absorb_test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />
@@ -15,6 +16,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Absorb" options="-parameters" />
+      <module name="absorb_test" options="-parameters" />
     </option>
   </component>
 </project>

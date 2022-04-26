@@ -58,6 +58,17 @@ public class FocusController {
     }
 
     /**
+     * get foucus details by user ID
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("focusListById")
+    public CommonResponse getFocusRecordById(@RequestParam("user_id") Integer userId) {
+        return CommonResponse.success(focusService.getFocusHistoryListByUserId(userId));
+    }
+
+    /**
      * get leaderboard list
      * @param total show total record leaderboard or just today's leaderboard
      * @return result
