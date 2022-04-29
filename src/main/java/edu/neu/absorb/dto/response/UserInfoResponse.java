@@ -15,10 +15,12 @@ public class UserInfoResponse {
     private Integer userId;
     private String username;
     private String nickname;
+    private Integer score;
 
     public UserInfoResponse(User user) {
         this.userId = user.getUserId();
         this.username = user.getUsername();
         this.nickname = user.getNickname();
+        this.score = user.getScore();
     }
 }
