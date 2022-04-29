@@ -7,6 +7,7 @@ import edu.neu.absorb.exception.CommonException;
 import edu.neu.absorb.exception.ExceptionEnum;
 import edu.neu.absorb.service.FocusService;
 import edu.neu.absorb.service.UserService;
+import edu.neu.absorb.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,9 @@ public class FocusController {
         if (!focusService.addFocusRecord(request.convertToFocusHistory())) {
             throw new CommonException(ExceptionEnum.SERVER_EXCEPTION);
         }
+        // update score
+        Integer intervalMinutes = TimeUtil.getIntervalMinutes(request.getStartTime(), request.getEndTime());
+        userService.addScore(request.getUserId(), (int)(intervalMinutes * request.getRate()));
         return CommonResponse.success("Successfully add focus record");
     }
 
@@ -55,17 +59,6 @@ public class FocusController {
             throw new AuthException(ExceptionEnum.AUTH_EXCEPTION);
         }
         return CommonResponse.success(focusService.getFocusDetailByHistoryId(historyId));
-    }
-
-    /**
-     * get foucus details by user ID
-     *
-     * @param userId
-     * @return
-     */
-    @GetMapping("focusListById")
-    public CommonResponse getFocusRecordById(@RequestParam("user_id") Integer userId) {
-        return CommonResponse.success(focusService.getFocusHistoryListByUserId(userId));
     }
 
     /**

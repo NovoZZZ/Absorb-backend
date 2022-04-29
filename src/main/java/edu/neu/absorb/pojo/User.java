@@ -26,4 +26,5 @@ public class User {
     private String token;
     private Date createTime;
     private Date updateTime;
+    private Integer score;
 }

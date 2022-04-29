@@ -19,4 +19,5 @@ public class LeaderboardRecordInfo {
     private Date createTime;
     private Double totalHour;
     private Integer focusCount;
+    private Integer score;
 }

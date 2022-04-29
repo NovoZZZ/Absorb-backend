@@ -18,6 +18,7 @@ public class AddFocusRecordRequest {
     private Date startTime;
     private Date endTime;
     private String token;
+    private Double rate;
 
     public FocusHistory convertToFocusHistory() {
         return new FocusHistory(null,

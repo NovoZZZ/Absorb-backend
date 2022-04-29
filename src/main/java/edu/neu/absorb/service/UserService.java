@@ -76,4 +76,13 @@ public interface UserService {
      * @return password is correct or not
      */
     boolean validateOldPassword(Integer userId, String password);
+
+    /**
+     * add score to an account
+     *
+     * @param userId target user id
+     * @param score add score
+     * @return success or not
+     */
+    boolean addScore(Integer userId, Integer score);
 }

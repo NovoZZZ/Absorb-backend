@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new CommonException(ExceptionEnum.USERNAME_EXIST_EXCEPTION);
         }
         // insert new row
-        User userInfo = new User(null, currentUsername, signUpRequest.getNickname(), DigestUtil.bcrypt(signUpRequest.getPassword()), null, null, null);
+        User userInfo = new User(null, currentUsername, signUpRequest.getNickname(), DigestUtil.bcrypt(signUpRequest.getPassword()), null, null, null, 0);
         if (userMapper.insert(userInfo) != 1) {
             throw new CommonException(ExceptionEnum.SERVER_EXCEPTION);
         }
@@ -89,11 +89,10 @@ public class UserServiceImpl implements UserService {
         // generate new token
         String newToken = generateNewToken(newUserId);
         // return result
-        LoginResponse response = new LoginResponse(newUserId,
+        return new LoginResponse(newUserId,
                 currentUsername,
                 signUpRequest.getNickname(),
                 newToken);
-        return response;
     }
 
     @Override
@@ -143,6 +142,15 @@ public class UserServiceImpl implements UserService {
         // update
         userMapper.updateById(userInfo);
         return token;
+    }
+
+
+    @Override
+    public boolean addScore(Integer userId, Integer score) {
+        // get user info
+        User userInfo = userMapper.selectById(userId);
+        userInfo.setScore(userInfo.getScore() + score);
+        return userMapper.updateById(userInfo) == 1;
     }
 
 }

@@ -57,6 +57,7 @@ public class FocusServiceImpl implements FocusService {
             User userInfo = userService.getUserByUserId(info.getUserId());
             info.setUsername(userInfo.getUsername());
             info.setCreateTime(userInfo.getCreateTime());
+            info.setScore(userInfo.getScore());
         }
         return result;
     }
