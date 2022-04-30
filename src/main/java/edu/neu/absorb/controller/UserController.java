@@ -4,6 +4,7 @@ import edu.neu.absorb.dto.CommonResponse;
 import edu.neu.absorb.dto.request.ChangePasswordRequest;
 import edu.neu.absorb.dto.request.LoginRequest;
 import edu.neu.absorb.dto.request.SignUpRequest;
+import edu.neu.absorb.dto.request.UpdateNicknameRequest;
 import edu.neu.absorb.dto.response.UserInfoResponse;
 import edu.neu.absorb.exception.AuthException;
 import edu.neu.absorb.exception.ExceptionEnum;
@@ -38,7 +39,7 @@ public class UserController {
             // no authorization
             throw new AuthException(ExceptionEnum.AUTH_EXCEPTION);
         }
-        return CommonResponse.success(new UserInfoResponse(userService.getUserByUserId(userId)));
+        return CommonResponse.success(userService.getUserInfoByUserId(userId));
     }
 
     /**
@@ -82,5 +83,17 @@ public class UserController {
             return CommonResponse.success("Invalid new password");
         }
         return CommonResponse.success("Successfully change password");
+    }
+
+    @PostMapping("/change_nickname")
+    public CommonResponse changeNickname(@RequestBody UpdateNicknameRequest request) {
+        // validate token
+        if (!userService.validateToken(request.getUserId(), request.getToken())) {
+            throw new AuthException(ExceptionEnum.AUTH_EXCEPTION);
+        }
+        if (!userService.updateNickname(request.getUserId(), request.getNickname())) {
+            return CommonResponse.error(ExceptionEnum.SERVER_EXCEPTION);
+        }
+        return CommonResponse.success("Successfully change nickname");
     }
 }

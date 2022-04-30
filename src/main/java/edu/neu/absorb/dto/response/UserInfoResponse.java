@@ -15,6 +15,9 @@ public class UserInfoResponse {
     private Integer userId;
     private String username;
     private String nickname;
+    private Date createTime;
+    private Integer focusCount;
+    private Integer totalHours;
     private Integer score;
 
     public UserInfoResponse(User user) {
@@ -22,5 +25,6 @@ public class UserInfoResponse {
         this.username = user.getUsername();
         this.nickname = user.getNickname();
         this.score = user.getScore();
+        this.createTime = user.getCreateTime();
     }
 }

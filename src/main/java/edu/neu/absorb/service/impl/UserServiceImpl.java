@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import edu.neu.absorb.dto.request.LoginRequest;
 import edu.neu.absorb.dto.request.SignUpRequest;
 import edu.neu.absorb.dto.response.LoginResponse;
+import edu.neu.absorb.dto.response.UserInfoResponse;
 import edu.neu.absorb.exception.AuthException;
 import edu.neu.absorb.exception.CommonException;
 import edu.neu.absorb.exception.ExceptionEnum;
+import edu.neu.absorb.mapper.FocusHistoryMapper;
 import edu.neu.absorb.mapper.UserMapper;
+import edu.neu.absorb.pojo.FocusHistory;
 import edu.neu.absorb.pojo.User;
 import edu.neu.absorb.service.UserService;
 import lombok.NonNull;
@@ -26,6 +29,9 @@ public class UserServiceImpl implements UserService {
     // user mapper
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private FocusHistoryMapper focusHistoryMapper;
 
     private static final String PASSWORD_SALT = "ffc81086bd1311ec9d640242ac120002";
 
@@ -151,6 +157,35 @@ public class UserServiceImpl implements UserService {
         User userInfo = userMapper.selectById(userId);
         userInfo.setScore(userInfo.getScore() + score);
         return userMapper.updateById(userInfo) == 1;
+    }
+
+    @Override
+    public UserInfoResponse getUserInfoByUserId(Integer userId) {
+        // get user basic info
+        UserInfoResponse userInfoResponse = new UserInfoResponse(getUserByUserId(userId));
+        // get focus count
+        QueryWrapper<FocusHistory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        Integer focusCount = focusHistoryMapper.selectCount(queryWrapper);
+        userInfoResponse.setFocusCount(focusCount);
+        // get total focus hours
+        int totalFocusHours = focusHistoryMapper.getTotalFocusHoursByUserId(userId);
+        userInfoResponse.setTotalHours(totalFocusHours);
+        return userInfoResponse;
+    }
+
+    @Override
+    public boolean updateNickname(Integer userId, String nickname) {
+        // get user info
+        User userInfo = userMapper.selectById(userId);
+        if (userInfo == null) {
+            throw new RuntimeException("update nickname -- " + userId + " doesn't exist");
+        }
+        // update nickname
+        userInfo.setNickname(nickname);
+        // update
+        userMapper.updateById(userInfo);
+        return true;
     }
 
 }

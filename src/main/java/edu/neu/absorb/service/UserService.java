@@ -3,6 +3,7 @@ package edu.neu.absorb.service;
 import edu.neu.absorb.dto.request.LoginRequest;
 import edu.neu.absorb.dto.request.SignUpRequest;
 import edu.neu.absorb.dto.response.LoginResponse;
+import edu.neu.absorb.dto.response.UserInfoResponse;
 import edu.neu.absorb.pojo.User;
 
 /**
@@ -81,8 +82,21 @@ public interface UserService {
      * add score to an account
      *
      * @param userId target user id
-     * @param score add score
+     * @param score  add score
      * @return success or not
      */
     boolean addScore(Integer userId, Integer score);
+
+    /**
+     * get user info by user id
+     *
+     * @param userId target user id
+     * @return user info
+     */
+    UserInfoResponse getUserInfoByUserId(Integer userId);
+
+    /**
+     * update nickname
+     */
+    boolean updateNickname(Integer userId, String nickname);
 }

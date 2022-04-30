@@ -30,4 +30,8 @@ public interface FocusHistoryMapper extends BaseMapper<FocusHistory> {
             " ORDER BY total_hour DESC" +
             " LIMIT 10;")
     List<LeaderboardRecordInfo> getTodayFocusLeaderBoardTop10();
+
+    @Select("SELECT SUM(UNIX_TIMESTAMP(end_time) - UNIX_TIMESTAMP(start_time))/60/60 AS total_hour FROM focus_history\n" +
+            " WHERE user_id = #{userId};")
+    int getTotalFocusHoursByUserId(Integer userId);
 }
