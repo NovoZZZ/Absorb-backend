@@ -56,7 +56,7 @@ public class FocusServiceImpl implements FocusService {
         // query user info
         for (LeaderboardRecordInfo info : result) {
             User userInfo = userService.getUserByUserId(info.getUserId());
-            info.setUsername(userInfo.getUsername());
+            info.setUsername(userInfo.getNickname());
             info.setCreateTime(userInfo.getCreateTime());
             info.setScore(userInfo.getScore());
         }
