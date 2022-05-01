@@ -35,6 +35,7 @@ public class FocusServiceImpl implements FocusService {
     public List<FocusHistory> getFocusHistoryListByUserId(@NonNull Integer userId) {
         QueryWrapper<FocusHistory> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
+        queryWrapper.orderByDesc("create_time");
         return focusHistoryMapper.selectList(queryWrapper);
     }
 
