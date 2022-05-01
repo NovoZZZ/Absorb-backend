@@ -8,6 +8,6 @@ import java.util.Date;
  */
 public class TimeUtil {
     public static Integer getIntervalMinutes(Date start, Date end) {
-        return (int)((end.getTime() - start.getTime()) / (1000 * 6));
+        return (int)((end.getTime() - start.getTime()) / (1000 * 60));
     }
 }
