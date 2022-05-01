@@ -169,8 +169,8 @@ public class UserServiceImpl implements UserService {
         Integer focusCount = focusHistoryMapper.selectCount(queryWrapper);
         userInfoResponse.setFocusCount(focusCount);
         // get total focus hours
-        int totalFocusHours = focusHistoryMapper.getTotalFocusHoursByUserId(userId);
-        userInfoResponse.setTotalHours(totalFocusHours);
+        Integer totalFocusHours = focusHistoryMapper.getTotalFocusHoursByUserId(userId);
+        userInfoResponse.setTotalHours(totalFocusHours == null ? 0 : totalFocusHours);
         return userInfoResponse;
     }
 
